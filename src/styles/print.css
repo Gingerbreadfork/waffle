@@ -1,0 +1,76 @@
+@media print {
+  .bar,
+  .strip,
+  .shelf,
+  .scrim,
+  .menu,
+  .toast-host,
+  .drop-hint,
+  .view-write,
+  .toc,
+  .code-copy,
+  .code-lang {
+    display: none !important;
+  }
+
+  html,
+  body,
+  #app,
+  .stage,
+  .view-read {
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body {
+    background: #fff;
+    color: #1b1b1b;
+  }
+
+  .view-read {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .read-grid {
+    display: block;
+    padding: 0;
+  }
+
+  .paper {
+    max-width: 42rem;
+    margin: 0 auto;
+    color: #1b1b1b;
+    font-size: 11.5pt;
+  }
+
+  .paper h1,
+  .paper h2,
+  .paper h3,
+  .paper strong {
+    color: #000;
+  }
+
+  .paper a {
+    color: #1b1b1b;
+  }
+
+  .paper pre {
+    background: #f3f3f3;
+    white-space: pre-wrap;
+  }
+
+  .paper h2,
+  .paper h3 {
+    break-after: avoid;
+  }
+
+  .paper pre,
+  .paper blockquote,
+  .paper figure,
+  .paper table {
+    break-inside: avoid;
+  }
+}

@@ -1,0 +1,13 @@
+.cm-editor .cm-line {
+  transition: opacity 0.35s var(--ease-out);
+}
+
+.cm-editor .cm-line.cm-dim {
+  opacity: 0.32;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --editor-size: 1rem;
+  }
+}
