@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Waffle",
-  "version": "0.1.0",
-  "identifier": "app.waffle.desktop",
+  "version": "0.1.1",
+  "identifier": "io.github.gingerbreadfork.waffle",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -61,6 +61,26 @@
           "English"
         ],
         "installerIcon": "icons/icon.ico"
+      }
+    },
+    "linux": {
+      "deb": {
+        "desktopTemplate": "waffle.desktop",
+        "files": {
+          "/usr/share/metainfo/io.github.gingerbreadfork.waffle.metainfo.xml": "io.github.gingerbreadfork.waffle.metainfo.xml"
+        },
+        "section": "editors"
+      },
+      "rpm": {
+        "desktopTemplate": "waffle.desktop",
+        "files": {
+          "/usr/share/metainfo/io.github.gingerbreadfork.waffle.metainfo.xml": "io.github.gingerbreadfork.waffle.metainfo.xml"
+        }
+      },
+      "appimage": {
+        "files": {
+          "/usr/share/metainfo/io.github.gingerbreadfork.waffle.metainfo.xml": "io.github.gingerbreadfork.waffle.metainfo.xml"
+        }
       }
     }
   }

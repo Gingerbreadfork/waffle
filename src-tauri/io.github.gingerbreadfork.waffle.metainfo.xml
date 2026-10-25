@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.gingerbreadfork.waffle</id>
+  <name>Waffle</name>
+  <summary>Read and write Markdown in two rooms</summary>
+  <developer id="io.github.gingerbreadfork">
+    <name>Gingerbreadfork</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>Waffle is a Markdown reader and editor with two rooms: one for reading, one for writing. Each is built for its own job, and you move between them with a single key.</p>
+    <p>The reading room is a page: a comfortable column, a warm serif, a table of contents that follows you, and live task lists. The writing room is plain text with just enough styling to keep you oriented, with find and replace, formatting shortcuts and a focus mode. Switching rooms keeps your place to the line.</p>
+    <p>Documents are saved as you type, and any Markdown file can be opened, edited and saved back in place.</p>
+  </description>
+  <launchable type="desktop-id">io.github.gingerbreadfork.waffle.desktop</launchable>
+  <url type="homepage">https://github.com/Gingerbreadfork/waffle</url>
+  <url type="bugtracker">https://github.com/Gingerbreadfork/waffle/issues</url>
+  <url type="vcs-browser">https://github.com/Gingerbreadfork/waffle</url>
+  <screenshots>
+    <screenshot type="default">
+      <caption>The reading room</caption>
+      <image>https://raw.githubusercontent.com/Gingerbreadfork/waffle/main/docs/screenshots/read-light.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The writing room</caption>
+      <image>https://raw.githubusercontent.com/Gingerbreadfork/waffle/main/docs/screenshots/write-light.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The reading room in the dark theme</caption>
+      <image>https://raw.githubusercontent.com/Gingerbreadfork/waffle/main/docs/screenshots/read-dark.png</image>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#f7f4ee</color>
+    <color type="primary" scheme_preference="dark">#1c1a18</color>
+  </branding>
+  <categories>
+    <category>Office</category>
+    <category>Utility</category>
+    <category>TextEditor</category>
+  </categories>
+  <keywords>
+    <keyword>markdown</keyword>
+    <keyword>editor</keyword>
+    <keyword>reader</keyword>
+    <keyword>notes</keyword>
+    <keyword>writing</keyword>
+  </keywords>
+  <content_rating type="oars-1.1" />
+  <supports>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </supports>
+  <requires>
+    <display_length compare="ge">520</display_length>
+  </requires>
+  <releases>
+    <release version="0.1.1" date="2026-10-25">
+      <url>https://github.com/Gingerbreadfork/waffle/releases/tag/v0.1.1</url>
+      <description>
+        <p>Ships the launcher and AppStream metadata in the Linux packages, under the application id io.github.gingerbreadfork.waffle.</p>
+      </description>
+    </release>
+    <release version="0.1.0" date="2026-10-25">
+      <url>https://github.com/Gingerbreadfork/waffle/releases/tag/v0.1.0</url>
+      <description>
+        <p>First release.</p>
+      </description>
+    </release>
+  </releases>
+</component>

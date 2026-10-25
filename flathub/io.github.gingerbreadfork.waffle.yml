@@ -1,0 +1,39 @@
+# Flathub manifest. Installs the Linux build from the GitHub release.
+app-id: io.github.gingerbreadfork.waffle
+runtime: org.gnome.Platform
+runtime-version: '49'
+sdk: org.gnome.Sdk
+command: waffle
+
+finish-args:
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  # Lets remembered file paths reopen and dropped files load without going through a dialog.
+  - --filesystem=home
+
+modules:
+  - name: waffle
+    buildsystem: simple
+    build-commands:
+      - ar -x waffle.deb
+      - tar -xf data.tar.gz
+      - install -Dm755 usr/bin/waffle /app/bin/waffle
+      - install -Dm644 usr/share/applications/Waffle.desktop /app/share/applications/io.github.gingerbreadfork.waffle.desktop
+      - sed -i 's/^Icon=.*/Icon=io.github.gingerbreadfork.waffle/' /app/share/applications/io.github.gingerbreadfork.waffle.desktop
+      - install -Dm644 usr/share/icons/hicolor/128x128/apps/waffle.png /app/share/icons/hicolor/128x128/apps/io.github.gingerbreadfork.waffle.png
+      - install -Dm644 usr/share/icons/hicolor/256x256@2/apps/waffle.png /app/share/icons/hicolor/256x256/apps/io.github.gingerbreadfork.waffle.png
+      - install -Dm644 usr/share/metainfo/io.github.gingerbreadfork.waffle.metainfo.xml /app/share/metainfo/io.github.gingerbreadfork.waffle.metainfo.xml
+    sources:
+      - type: file
+        dest-filename: waffle.deb
+        url: https://github.com/Gingerbreadfork/waffle/releases/download/v0.1.1/Waffle_0.1.1_amd64.deb
+        sha256: REPLACE_WITH_THE_SHA256_OF_THE_RELEASED_DEB
+        only-arches:
+          - x86_64
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/Gingerbreadfork/waffle/releases/latest
+          version-query: .tag_name | sub("^v"; "")
+          url-query: .assets[] | select(.name | endswith("_amd64.deb")) | .browser_download_url

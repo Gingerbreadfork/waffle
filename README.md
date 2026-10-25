@@ -229,9 +229,9 @@ src/
 src-tauri/                 the Rust shell: plugins, window, capabilities
 ```
 
-Documents live in `~/.local/share/app.waffle.desktop/library.json` on Linux and in
-`%APPDATA%\app.waffle.desktop\library.json` on Windows. Theme and focus preferences live in
-the web view's local storage.
+Documents live in `~/.local/share/io.github.gingerbreadfork.waffle/library.json` on Linux
+and in `%APPDATA%\io.github.gingerbreadfork.waffle\library.json` on Windows. Theme and focus
+preferences live in the web view's local storage.
 
 ## Not planned
 
