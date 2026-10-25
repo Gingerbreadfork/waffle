@@ -103,6 +103,22 @@ reading room with a stylesheet made for paper.
 **Follows your desktop.** Light and dark themes track the system setting until you pin one.
 The window title is the document title.
 
+## Install
+
+Grab the package for your system from the
+[Releases](https://github.com/Gingerbreadfork/waffle/releases) page.
+
+```sh
+sudo dnf install ./Waffle-*.x86_64.rpm            # Fedora, RHEL, openSUSE
+sudo apt install ./Waffle_*_amd64.deb             # Debian, Ubuntu, Mint
+chmod +x Waffle_*.AppImage && ./Waffle_*.AppImage # anything else
+```
+
+On Windows, run `Waffle_*_x64-setup.exe`. It installs for the current user and needs no
+administrator rights. It isn't code-signed, so SmartScreen warns the first time: choose
+"More info", then "Run anyway". Waffle renders with the WebView2 runtime that ships with
+Windows 10 and 11, and the installer fetches it if a machine doesn't have it.
+
 ## Using it
 
 Press Ctrl+E to switch rooms, or click Read and Write in the top bar. On macOS use ⌘ in
@@ -213,8 +229,9 @@ src/
 src-tauri/                 the Rust shell: plugins, window, capabilities
 ```
 
-Documents live in `~/.local/share/app.waffle.desktop/library.json` on Linux. Theme and
-focus preferences live in the web view's local storage.
+Documents live in `~/.local/share/app.waffle.desktop/library.json` on Linux and in
+`%APPDATA%\app.waffle.desktop\library.json` on Windows. Theme and focus preferences live in
+the web view's local storage.
 
 ## Not planned
 
@@ -222,12 +239,14 @@ Waffle is not a split-pane previewer and will not become a rich text editor. Liv
 WYSIWYG editing, plugins, cloud sync and accounts are out of scope.
 
 Things that might land: find in the reading room, a text size control, an outline in the
-writing room, maths and diagrams, pasting images, and Windows and macOS packages.
+writing room, maths and diagrams, pasting images, and macOS packages.
 
 ## Building from source
 
 You need Rust (stable), Node 24 or newer (there is an `.nvmrc` for Node 26), and pnpm. On
-Linux you also need the WebKitGTK development libraries.
+Linux you also need the WebKitGTK development libraries. On Windows you need the Visual
+Studio Build Tools with the "Desktop development with C++" workload, and the WebView2
+runtime, which Windows 10 and 11 already have.
 
 ```sh
 # Fedora
@@ -249,14 +268,14 @@ pnpm tauri build            # packages for this platform in src-tauri/target/rel
 pnpm check                  # type check
 ```
 
-On Linux the build produces an `.rpm`, a `.deb` and an `.AppImage`. Install the one for your
-system:
+On Linux the build produces an `.rpm`, a `.deb` and an `.AppImage`, which install as shown
+under [Install](#install). On Windows it produces the `-setup.exe` installer in
+`src-tauri\target\release\bundle\nsis`.
 
-```sh
-sudo dnf install ./Waffle-*.x86_64.rpm            # Fedora, RHEL, openSUSE
-sudo apt install ./Waffle_*_amd64.deb             # Debian, Ubuntu, Mint
-chmod +x Waffle_*.AppImage && ./Waffle_*.AppImage # anything else
-```
+CI builds the Linux packages and the Windows installer on every push to main and keeps them
+as workflow artifacts. Pushing a tag like `v0.2.0` builds them again and attaches them to a
+GitHub release. The tag has to match the version in `package.json`,
+`src-tauri/tauri.conf.json` and `src-tauri/Cargo.toml`.
 
 `pnpm dev` runs the interface alone in a browser. File dialogs fall back to the browser's
 picker and downloads, and documents are kept in IndexedDB instead of the app data directory.
@@ -268,8 +287,9 @@ default release-age policy, so a package published in the last day is held back 
 been out for a day.
 
 Waffle is developed and tested on Fedora with GNOME on Wayland, and should run on any Linux
-desktop with WebKitGTK 4.1. The window configuration includes the macOS overlay title bar,
-but neither macOS nor Windows has been tried yet; if you do, please open an issue.
+desktop with WebKitGTK 4.1. The Windows installer is built by CI but has seen little use,
+and macOS hasn't been tried yet, though the window configuration includes its overlay title
+bar. If something is off on either, please open an issue.
 
 ## License
 
