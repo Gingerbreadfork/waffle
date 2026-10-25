@@ -91,9 +91,7 @@
     justify-content: space-between;
     gap: 1rem;
     padding: 0 0.75rem 0 0.5rem;
-    background: color-mix(in oklab, var(--bg) 78%, transparent);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
-    backdrop-filter: blur(14px) saturate(1.2);
+    background: var(--bg);
     border-bottom: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
     user-select: none;
   }

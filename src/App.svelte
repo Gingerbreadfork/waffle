@@ -75,9 +75,7 @@
     z-index: 60;
     display: grid;
     place-items: center;
-    background: color-mix(in oklab, var(--bg) 72%, transparent);
-    -webkit-backdrop-filter: blur(6px);
-    backdrop-filter: blur(6px);
+    background: color-mix(in oklab, var(--bg) 88%, transparent);
     pointer-events: none;
   }
 

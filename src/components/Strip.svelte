@@ -38,9 +38,7 @@
     font-size: 0.75rem;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
-    background: color-mix(in oklab, var(--bg) 78%, transparent);
-    -webkit-backdrop-filter: blur(14px);
-    backdrop-filter: blur(14px);
+    background: var(--bg);
     border-top: 1px solid color-mix(in oklab, var(--line) 70%, transparent);
     transform: translateY(100%);
     opacity: 0;
