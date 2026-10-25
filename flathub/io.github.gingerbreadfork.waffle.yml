@@ -29,7 +29,7 @@ modules:
       - type: file
         dest-filename: waffle.deb
         url: https://github.com/Gingerbreadfork/waffle/releases/download/v0.1.1/Waffle_0.1.1_amd64.deb
-        sha256: REPLACE_WITH_THE_SHA256_OF_THE_RELEASED_DEB
+        sha256: 1fdf80c4fb5a71c6f45c6dd6cdb3592a3bf37563cf6e75ff21e2f454bbb4f70e
         only-arches:
           - x86_64
         x-checker-data:
