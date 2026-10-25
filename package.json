@@ -1,7 +1,7 @@
 {
   "name": "waffle",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "description": "A Markdown reader and editor with separate rooms for reading and writing.",
   "license": "MIT",

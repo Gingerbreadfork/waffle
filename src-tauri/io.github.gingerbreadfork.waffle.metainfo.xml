@@ -56,6 +56,12 @@
     <display_length compare="ge">520</display_length>
   </requires>
   <releases>
+    <release version="0.1.2" date="2026-10-26">
+      <url>https://github.com/Gingerbreadfork/waffle/releases/tag/v0.1.2</url>
+      <description>
+        <p>Fixes flicker across the window when the documents drawer opens or closes.</p>
+      </description>
+    </release>
     <release version="0.1.1" date="2026-10-25">
       <url>https://github.com/Gingerbreadfork/waffle/releases/tag/v0.1.1</url>
       <description>
