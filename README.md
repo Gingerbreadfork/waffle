@@ -38,6 +38,11 @@ the section you're in. A thin line under the top bar shows how far through the d
 are. Smart quotes, dashes and ellipses are applied on display and never written to your
 file.
 
+**Lets you set the page.** Click Contents above the table of contents to fold it away, and
+again to bring it back. The menu sets the page width: narrow, medium, wide, or the full
+window. Both rooms share the width, so the switch between them still feels like the same
+sheet, and changing it keeps your place.
+
 **Renders all of it.** Headings, lists, task lists, quotes, tables, footnotes, images with
 captions, fenced code with syntax highlighting and a copy button, raw HTML (sanitised), and
 links that open in your browser. Horizontal rules are drawn as a row of three waffle
@@ -137,12 +142,14 @@ place of Ctrl.
 | Back to reading | Esc |
 | Edit the paragraph under the pointer | Double-click it while reading |
 | Focus mode | Focus, in the bottom bar |
+| Page width | Page width, in the menu at the top right |
 
 | Reading | |
 | --- | --- |
 | Find on the page | Ctrl+F |
 | Next match, previous match | Enter, Shift+Enter, or F3, Shift+F3 |
 | Close find | Esc |
+| Fold the contents away or back | Click Contents above them |
 
 | Writing | |
 | --- | --- |
@@ -171,6 +178,8 @@ place of Ctrl.
 - Links inside the document scroll smoothly; links to the web open in your browser, not in
   the app.
 - Select some text before pressing Ctrl+F and find starts with it.
+- The contents only appear when there's room for them beside the page. A narrower page
+  makes room on a smaller window.
 - Press Ctrl+B with nothing selected and the word under the cursor is wrapped. Press it
   again and it's unwrapped.
 - The reading room remembers its scroll position per document, and the editor its cursor.
@@ -246,8 +255,8 @@ src-tauri/                 the Rust shell: plugins, window, capabilities, opened
 ```
 
 Documents live in `~/.local/share/io.github.gingerbreadfork.waffle/library.json` on Linux
-and in `%APPDATA%\io.github.gingerbreadfork.waffle\library.json` on Windows. Theme and focus
-preferences live in the web view's local storage.
+and in `%APPDATA%\io.github.gingerbreadfork.waffle\library.json` on Windows. Theme, focus,
+page width and contents preferences live in the web view's local storage.
 
 ## Not planned
 

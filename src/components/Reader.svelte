@@ -10,10 +10,15 @@
   let article = $state<HTMLElement>();
   let activeId = $state('');
   let finder = $state<ReturnType<typeof Find>>();
+  let viewWidth = $state(0);
 
   const rendered = $derived(renderMarkdown(ws.readSource));
   const tocEntries = $derived(rendered.toc.filter((entry) => entry.level <= 3));
   const empty = $derived(ws.readSource.trim() === '');
+
+  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  // The contents fit when each margin beside the page has room for them.
+  const tocFits = $derived(ws.measureRem !== null && viewWidth >= (ws.measureRem + 32) * rem);
 
   ws.reader = {
     anchor,
@@ -181,21 +186,32 @@
   bind:this={root}
   tabindex="-1"
   aria-label="Reading"
+  bind:clientWidth={viewWidth}
   {onscroll}
 >
   <div class="grid">
-    <nav class={['toc', { show: tocEntries.length > 1 }]} aria-label="Contents">
-      {#each tocEntries as entry (entry.id)}
-        <a
-          class={['toc-link', `lvl-${entry.level}`, { active: entry.id === activeId }]}
-          href="#{entry.id}"
-          onclick={(e) => {
-            e.preventDefault();
-            scrollToId(entry.id);
-          }}>{entry.text}</a
-        >
-      {/each}
-    </nav>
+    {#if tocEntries.length > 1 && tocFits}
+      <nav class="toc" aria-label="Contents">
+        <button class="toc-toggle" aria-expanded={ws.showContents} aria-controls="toc-list" onclick={() => ws.toggleContents()}>
+          Contents
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" /></svg>
+        </button>
+        {#if ws.showContents}
+          <div class="toc-list" id="toc-list">
+            {#each tocEntries as entry (entry.id)}
+              <a
+                class={['toc-link', `lvl-${entry.level}`, { active: entry.id === activeId }]}
+                href="#{entry.id}"
+                onclick={(e) => {
+                  e.preventDefault();
+                  scrollToId(entry.id);
+                }}>{entry.text}</a
+              >
+            {/each}
+          </div>
+        {/if}
+      </nav>
+    {/if}
     {#if empty}
       <div class="paper paper-empty">
         <p>Nothing to read yet.</p>
@@ -245,13 +261,49 @@
     padding-right: 0.5rem;
     font-size: 0.78rem;
     line-height: 1.35;
-    display: none;
     scrollbar-width: none;
   }
 
-  @media (min-width: 1180px) {
-    .toc.show {
-      display: block;
+  .toc-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.35rem;
+    padding: 0.32rem 0.65rem;
+    border-left: 2px solid transparent;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    transition: color 0.15s;
+  }
+
+  .toc-toggle:hover {
+    color: var(--ink-strong);
+  }
+
+  .toc-toggle svg {
+    width: 10px;
+    height: 10px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.2s var(--ease-out);
+  }
+
+  .toc-toggle[aria-expanded='false'] svg {
+    transform: rotate(-90deg);
+  }
+
+  .toc-list {
+    animation: toc-in 0.18s var(--ease-out);
+  }
+
+  @keyframes toc-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
     }
   }
 

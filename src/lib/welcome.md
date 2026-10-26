@@ -6,7 +6,7 @@ You're in the reading room now. Press **Ctrl+E** (⌘E on a Mac) to step into th
 
 ## Reading
 
-The reading room is set in Fraunces, a warm serif that holds up at every size. The column is a comfortable width, the line height is generous, and nothing competes with the words. On a wide screen a table of contents sits to the left and follows you as you scroll.
+The reading room is set in Fraunces, a warm serif that holds up at every size. The column is a comfortable width, the line height is generous, and nothing competes with the words. On a wide screen a table of contents sits to the left and follows you as you scroll. Click Contents to fold it away, and pick a narrower or wider page from the menu at the top right.
 
 > A good reading view has one job: get out of the way.
 

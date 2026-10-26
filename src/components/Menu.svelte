@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { getWorkspace } from '../lib/workspace.svelte';
+  import { getWorkspace, PAGE_WIDTHS } from '../lib/workspace.svelte';
 
   const ws = getWorkspace();
   let root = $state<HTMLElement>();
   let confirming = $state(false);
+
+  const widthIndex = $derived(PAGE_WIDTHS.findIndex((w) => w.id === ws.pageWidth));
 
   function run(action: () => unknown) {
     ws.menuOpen = false;
@@ -16,9 +18,20 @@
   }
 
   function onkeydown(event: KeyboardEvent) {
+    const target = event.target as HTMLElement;
+    // Left and right move between page widths; up and down skip past them.
+    if ((event.key === 'ArrowLeft' || event.key === 'ArrowRight') && target.getAttribute('role') === 'menuitemradio') {
+      event.preventDefault();
+      const next = event.key === 'ArrowRight' ? target.nextElementSibling : target.previousElementSibling;
+      if (next instanceof HTMLButtonElement) {
+        next.focus();
+        next.click();
+      }
+      return;
+    }
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
     event.preventDefault();
-    const items = Array.from(root?.querySelectorAll<HTMLButtonElement>('button') ?? []);
+    const items = Array.from(root?.querySelectorAll<HTMLButtonElement>('button:not([role=menuitemradio]), [aria-checked=true]') ?? []);
     const index = items.indexOf(document.activeElement as HTMLButtonElement);
     const next = event.key === 'ArrowDown' ? index + 1 : index - 1;
     items[(next + items.length) % items.length]?.focus();
@@ -44,6 +57,16 @@
   <button role="menuitem" onclick={() => run(() => ws.copyMarkdown())}>Copy Markdown</button>
   <button role="menuitem" onclick={() => run(() => ws.print())}>Print<kbd>{ws.modKey} P</kbd></button>
   <hr />
+  <div class="width" role="group" aria-labelledby="width-label">
+    <span id="width-label">Page width</span>
+    <div class="seg" style:--i={widthIndex} style:--n={PAGE_WIDTHS.length}>
+      <span class="butter" aria-hidden="true"></span>
+      {#each PAGE_WIDTHS as width (width.id)}
+        <button role="menuitemradio" aria-checked={width.id === ws.pageWidth} onclick={() => ws.setPageWidth(width.id)}>{width.label}</button>
+      {/each}
+    </div>
+  </div>
+  <hr />
   {#if confirming}
     <div class="confirm">
       <span>{ws.current?.path ? 'Remove from the list? The file stays on disk.' : 'Delete for good?'}</span>
@@ -65,7 +88,7 @@
     top: calc(100% + 8px);
     right: 0;
     z-index: 40;
-    min-width: 240px;
+    min-width: 268px;
     padding: 0.35rem;
     background: var(--bg-raised);
     border: 1px solid var(--line);
@@ -116,6 +139,59 @@
     font: inherit;
     font-size: 0.72rem;
     color: var(--ink-soft);
+  }
+
+  .width {
+    padding: 0.4rem 0.65rem 0.5rem;
+    font-size: 0.8375rem;
+    color: var(--ink);
+  }
+
+  .seg {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    margin-top: 0.45rem;
+    padding: 3px;
+    background: var(--bg-chrome);
+    border-radius: 9px;
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--line) 80%, transparent);
+  }
+
+  /* The same pat of butter as the mode switch, without its bounce */
+  .seg .butter {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: calc((100% - 6px) / var(--n));
+    height: calc(100% - 6px);
+    border-radius: 7px;
+    background: var(--golden);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.38),
+      0 1px 2px rgb(var(--shadow) / 0.28);
+    transform: translateX(calc(var(--i) * 100%));
+    transition: transform 0.25s var(--ease-out);
+  }
+
+  .seg button {
+    position: relative;
+    z-index: 1;
+    height: 26px;
+    border-radius: 7px;
+    font-size: 0.75rem;
+    font-weight: 580;
+    color: var(--ink-soft);
+    transition: color 0.2s;
+  }
+
+  .seg button:hover:not([aria-checked='true']) {
+    color: var(--ink);
+  }
+
+  .seg button[aria-checked='true'] {
+    color: #2b1a0d;
   }
 
   hr {

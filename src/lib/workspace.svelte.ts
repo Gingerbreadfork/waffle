@@ -25,12 +25,24 @@ export interface ReaderApi {
 
 export const BAR_INSET = 52;
 
+export type PageWidth = 'narrow' | 'medium' | 'wide' | 'full';
+
+// Widths of the text column in rem, shared by both rooms. Full fills the window.
+export const PAGE_WIDTHS: { id: PageWidth; label: string; rem: number | null }[] = [
+  { id: 'narrow', label: 'Narrow', rem: 36 },
+  { id: 'medium', label: 'Medium', rem: 42 },
+  { id: 'wide', label: 'Wide', rem: 52 },
+  { id: 'full', label: 'Full', rem: null },
+];
+
 export class Workspace {
   docs = $state<WaffleDoc[]>([]);
   current = $state<WaffleDoc | null>(null);
   mode = $state<Mode>('read');
   theme = $state<Theme>('light');
   focus = $state(false);
+  pageWidth = $state<PageWidth>('medium');
+  showContents = $state(true);
   shelfOpen = $state(false);
   menuOpen = $state(false);
   findOpen = $state(false);
@@ -41,6 +53,7 @@ export class Workspace {
   readSource = $state('');
   progress = $state(0);
 
+  measureRem = $derived(PAGE_WIDTHS.find((w) => w.id === this.pageWidth)?.rem ?? null);
   sortedDocs = $derived([...this.docs].sort((a, b) => b.updatedAt - a.updatedAt));
   dirty = $derived(!!this.current?.path && this.current.content !== this.current.diskContent);
   saveLabel = $derived.by(() => {
@@ -69,6 +82,9 @@ export class Workspace {
       if (!storedTheme()) this.applyTheme(e.matches ? 'dark' : 'light', false);
     });
     this.focus = settings.get('focus', false);
+    const width = settings.get<string>('pageWidth', 'medium');
+    if (PAGE_WIDTHS.some((w) => w.id === width)) this.pageWidth = width as PageWidth;
+    this.showContents = settings.get('contents', true);
 
     try {
       this.library = await openLibrary();
@@ -446,6 +462,24 @@ export class Workspace {
   toggleFocus(): void {
     this.focus = !this.focus;
     settings.set('focus', this.focus);
+  }
+
+  toggleContents(): void {
+    this.showContents = !this.showContents;
+    settings.set('contents', this.showContents);
+  }
+
+  async setPageWidth(width: PageWidth): Promise<void> {
+    if (width === this.pageWidth) return;
+    // The text reflows, so put the line that was at the top of the screen back there.
+    const anchor = this.mode === 'read' ? this.reader?.anchor() : this.editor?.anchor();
+    this.pageWidth = width;
+    settings.set('pageWidth', width);
+    await tick();
+    this.editor?.relayout();
+    if (!anchor) return;
+    if (this.mode === 'read') this.reader?.scrollToLine(anchor.line, anchor.offset);
+    else this.editor?.scrollToLine(anchor.line, anchor.offset, false);
   }
 
   // Theme

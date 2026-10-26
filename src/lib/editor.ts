@@ -34,6 +34,7 @@ export interface EditorApi {
   blur(): void;
   setFocusMode(on: boolean): void;
   find(): void;
+  relayout(): void;
 }
 
 export interface EditorOptions {
@@ -346,6 +347,8 @@ export function createEditor(parent: HTMLElement, options: EditorOptions): { api
       if (view.state.field(focusModeField) !== on) view.dispatch({ effects: setFocusMode.of(on) });
     },
     find: () => void openSearchPanel(view),
+    // The column width is set in CSS, which the editor does not watch.
+    relayout: () => view.requestMeasure(),
   };
 
   return { api, destroy: () => view.destroy() };

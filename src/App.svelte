@@ -34,7 +34,7 @@
 
 <svelte:window onkeydown={(e) => ws.handleKey(e)} {ondragover} {ondragleave} {ondrop} />
 
-<div class={['app', { ready: ws.ready }]} data-mode={ws.mode}>
+<div class={['app', { ready: ws.ready }]} data-mode={ws.mode} style:--measure={ws.measureRem ? `${ws.measureRem}rem` : '100vw'}>
   <TopBar />
   <main class="stage">
     <Reader />
