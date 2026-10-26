@@ -19,6 +19,8 @@ export interface ReaderApi {
   getScrollTop(): number;
   setScrollTop(top: number): void;
   focus(): void;
+  find(): void;
+  findNext(by: 1 | -1): void;
 }
 
 export const BAR_INSET = 52;
@@ -31,6 +33,7 @@ export class Workspace {
   focus = $state(false);
   shelfOpen = $state(false);
   menuOpen = $state(false);
+  findOpen = $state(false);
   dropping = $state(false);
   saving = $state(false);
   ready = $state(false);
@@ -429,6 +432,17 @@ export class Workspace {
     void this.setMode(this.mode === 'read' ? 'write' : 'read');
   }
 
+  // Find on the page while reading, or the editor's find and replace while writing.
+  find(): void {
+    if (this.mode === 'read') this.reader?.find();
+    else this.editor?.find();
+  }
+
+  closeFind(): void {
+    this.findOpen = false;
+    this.reader?.focus();
+  }
+
   toggleFocus(): void {
     this.focus = !this.focus;
     settings.set('focus', this.focus);
@@ -458,6 +472,13 @@ export class Workspace {
         this.shelfOpen = false;
         return;
       }
+      // The editor uses Escape to return to reading, which must not also close find.
+      if (this.findOpen && this.mode === 'read' && !event.defaultPrevented) this.closeFind();
+      return;
+    }
+    if (event.key === 'F3' && this.findOpen && this.mode === 'read') {
+      event.preventDefault();
+      this.reader?.findNext(event.shiftKey ? -1 : 1);
       return;
     }
     const mod = this.isMac ? event.metaKey : event.ctrlKey;
@@ -483,6 +504,17 @@ export class Workspace {
       case 'p':
         event.preventDefault();
         void this.print();
+        break;
+      case 'f':
+        // The editor opens its own search panel when it has focus.
+        if (event.defaultPrevented) break;
+        event.preventDefault();
+        this.find();
+        break;
+      case 'g':
+        if (!this.findOpen || this.mode !== 'read') break;
+        event.preventDefault();
+        this.reader?.findNext(event.shiftKey ? -1 : 1);
         break;
     }
   }

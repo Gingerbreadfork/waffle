@@ -46,6 +46,11 @@ pockets.
 **Lets you tick things off while reading.** Task list checkboxes are live. Tick one and the
 `[ ]` in your Markdown becomes `[x]`, with nothing else touched.
 
+**Finds things on the page.** Ctrl+F in the reading room highlights every match in the
+rendered text, and Enter steps through them, scrolling code blocks and wide tables sideways
+when a match is out of view. A straight quote finds a curly one, and a phrase still matches
+where your source breaks it across lines.
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/read-dark-code.png">
@@ -133,6 +138,12 @@ place of Ctrl.
 | Edit the paragraph under the pointer | Double-click it while reading |
 | Focus mode | Focus, in the bottom bar |
 
+| Reading | |
+| --- | --- |
+| Find on the page | Ctrl+F |
+| Next match, previous match | Enter, Shift+Enter, or F3, Shift+F3 |
+| Close find | Esc |
+
 | Writing | |
 | --- | --- |
 | Bold, italic | Ctrl+B, Ctrl+I |
@@ -159,6 +170,7 @@ place of Ctrl.
   its place.
 - Links inside the document scroll smoothly; links to the web open in your browser, not in
   the app.
+- Select some text before pressing Ctrl+F and find starts with it.
 - Press Ctrl+B with nothing selected and the word under the cursor is wrapped. Press it
   again and it's unwrapped.
 - The reading room remembers its scroll position per document, and the editor its cursor.
@@ -225,6 +237,7 @@ src/
   lib/workspace.svelte.ts  documents, modes, saving, position sync, keyboard
   lib/editor.ts            CodeMirror setup, theme, focus mode, formatting commands
   lib/markdown.ts          rendering, source maps, task lists, sanitising, HTML export
+  lib/find.ts              find on the page, as ranges for the CSS highlight API
   lib/files.ts             dialogs, files, clipboard and links, with browser fallbacks
   lib/library.ts           the document store, with an IndexedDB fallback for the browser
   lib/welcome.md           the first document
@@ -241,7 +254,7 @@ preferences live in the web view's local storage.
 Waffle is not a split-pane previewer and will not become a rich text editor. Live preview,
 WYSIWYG editing, plugins, cloud sync and accounts are out of scope.
 
-Things that might land: find in the reading room, a text size control, an outline in the
+Things that might land: a text size control, an outline in the
 writing room, maths and diagrams, pasting images, and macOS packages.
 
 ## Building from source

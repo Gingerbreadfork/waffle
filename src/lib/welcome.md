@@ -52,7 +52,7 @@ Inline code like `Ctrl+S` gets a quiet pill. Hover a code block for a copy butto
 | Ctrl+O | Open a Markdown file |
 | Ctrl+\ | Show your documents |
 | Ctrl+B, Ctrl+I, Ctrl+K | Bold, italic, link while writing |
-| Ctrl+F | Find while writing |
+| Ctrl+F | Find on the page, or find and replace while writing |
 
 ---
 

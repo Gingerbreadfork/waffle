@@ -12,7 +12,7 @@ import {
   type ViewUpdate,
 } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
+import { searchKeymap, highlightSelectionMatches, openSearchPanel } from '@codemirror/search';
 import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
 import { languages } from '@codemirror/language-data';
 import { syntaxHighlighting, HighlightStyle, bracketMatching, indentUnit } from '@codemirror/language';
@@ -33,6 +33,7 @@ export interface EditorApi {
   focus(): void;
   blur(): void;
   setFocusMode(on: boolean): void;
+  find(): void;
 }
 
 export interface EditorOptions {
@@ -344,6 +345,7 @@ export function createEditor(parent: HTMLElement, options: EditorOptions): { api
       focusOn = on;
       if (view.state.field(focusModeField) !== on) view.dispatch({ effects: setFocusMode.of(on) });
     },
+    find: () => void openSearchPanel(view),
   };
 
   return { api, destroy: () => view.destroy() };

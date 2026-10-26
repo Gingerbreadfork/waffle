@@ -2,12 +2,14 @@
   import { getWorkspace, BAR_INSET } from '../lib/workspace.svelte';
   import { renderMarkdown } from '../lib/markdown';
   import { openExternal } from '../lib/files';
+  import Find from './Find.svelte';
 
   const ws = getWorkspace();
 
   let root = $state<HTMLElement>();
   let article = $state<HTMLElement>();
   let activeId = $state('');
+  let finder = $state<ReturnType<typeof Find>>();
 
   const rendered = $derived(renderMarkdown(ws.readSource));
   const tocEntries = $derived(rendered.toc.filter((entry) => entry.level <= 3));
@@ -21,6 +23,8 @@
       if (root) root.scrollTop = top;
     },
     focus: () => root?.focus({ preventScroll: true }),
+    find: () => void finder?.open(),
+    findNext: (by) => finder?.step(by),
   };
 
   function blocks(): HTMLElement[] {
@@ -206,6 +210,8 @@
     {/if}
   </div>
 </section>
+
+<Find bind:this={finder} {article} scroller={root} html={rendered.html} />
 
 <style>
   .view-read {

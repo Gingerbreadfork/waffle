@@ -427,6 +427,16 @@
   color: var(--ink-strong);
 }
 
+/* Find on the page, in the same golds as the editor's search matches */
+
+::highlight(find) {
+  background-color: color-mix(in oklab, var(--golden) 30%, transparent);
+}
+
+::highlight(find-current) {
+  background-color: color-mix(in oklab, var(--golden) 60%, transparent);
+}
+
 /* The block you came from when switching out of writing gets a brief glow */
 
 .paper .is-here {

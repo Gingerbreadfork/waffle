@@ -39,6 +39,7 @@
   </button>
   <button role="menuitem" onclick={() => run(() => ws.saveAs())}>Save as<kbd>{ws.modKey} ⇧ S</kbd></button>
   <hr />
+  <button role="menuitem" onclick={() => run(() => ws.find())}>Find<kbd>{ws.modKey} F</kbd></button>
   <button role="menuitem" onclick={() => run(() => ws.exportHtml())}>Export as HTML</button>
   <button role="menuitem" onclick={() => run(() => ws.copyMarkdown())}>Copy Markdown</button>
   <button role="menuitem" onclick={() => run(() => ws.print())}>Print<kbd>{ws.modKey} P</kbd></button>
