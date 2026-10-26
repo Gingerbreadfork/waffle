@@ -31,6 +31,15 @@
       "csp": null
     }
   },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU4QUE0RDcyNkVDRjQyMEMKUldRTVFzOXVjazJxNkFONmdpempYRW9FOVM2S0ZDZmNBaktRa3Z0cjFISjBPRVZRRExPN2FacDIK",
+      "endpoints": [
+        "https://github.com/Gingerbreadfork/waffle/releases/latest/download/latest.json"
+      ],
+      "requireSignedVersion": true
+    }
+  },
   "bundle": {
     "active": true,
     "targets": [

@@ -115,6 +115,12 @@ reading room with a stylesheet made for paper.
 **Follows your desktop.** Light and dark themes track the system setting until you pin one.
 The window title is the document title.
 
+**Keeps itself up to date.** The desktop app looks for a new release shortly after it starts
+and every few hours, downloads it in the background, and puts a gold dot on the menu button
+when it's ready. Choose Restart to update in the menu to install it. The deb and rpm
+packages install system-wide, so they ask for your password first. The Flatpak is updated
+by Flathub instead.
+
 ## Install
 
 Grab the package for your system from the
@@ -224,8 +230,8 @@ when you return to it.
 
 - [Tauri 2](https://tauri.app) provides the window and the native pieces: file dialogs,
   reading and writing files, the clipboard, opening links, and a JSON store in the app data
-  directory for the document list. The Rust side registers those plugins, keeps Waffle to a
-  single instance, and hands the window any files it was asked to open.
+  directory for the document list, and the updater. The Rust side registers those plugins,
+  keeps Waffle to a single instance, and hands the window any files it was asked to open.
 - The interface is [Svelte 5](https://svelte.dev) with runes. One `Workspace` class holds
   the state and the orchestration; components are thin.
 - Markdown is rendered by markdown-it with a few small rules of its own: source line numbers
@@ -301,6 +307,11 @@ CI builds the Linux packages and the Windows installer on every push to main and
 as workflow artifacts. Pushing a tag like `v0.2.0` builds them again and attaches them to a
 GitHub release. The tag has to match the version in `package.json`,
 `src-tauri/tauri.conf.json` and `src-tauri/Cargo.toml`.
+
+The release build signs every package with the updater key held in the
+`TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` secrets, and publishes a
+`latest.json` beside them that installed copies read to find and verify updates. Other
+builds, in CI or on your machine, skip the signing and need no key.
 
 `pnpm dev` runs the interface alone in a browser. File dialogs fall back to the browser's
 picker and downloads, and documents are kept in IndexedDB instead of the app data directory.

@@ -9,6 +9,7 @@ import { deriveTitle, snippet, docStats, renderMarkdown, exportHtml } from './ma
 import { settings, storedTheme, systemTheme, saveTheme, type Theme } from './settings';
 import { toasts } from './toasts.svelte';
 import type { EditorApi, Anchor } from './editor';
+import { fetchUpdate, applyUpdate, type Update } from './updates';
 import welcome from './welcome.md?raw';
 
 export type Mode = 'read' | 'write';
@@ -24,6 +25,9 @@ export interface ReaderApi {
 }
 
 export const BAR_INSET = 52;
+
+const UPDATE_DELAY = 10_000;
+const UPDATE_INTERVAL = 6 * 60 * 60 * 1000;
 
 export type PageWidth = 'narrow' | 'medium' | 'wide' | 'full';
 
@@ -52,6 +56,7 @@ export class Workspace {
   stats = $state({ words: 0, minutes: 0 });
   readSource = $state('');
   progress = $state(0);
+  updateVersion = $state<string | null>(null);
 
   measureRem = $derived(PAGE_WIDTHS.find((w) => w.id === this.pageWidth)?.rem ?? null);
   sortedDocs = $derived([...this.docs].sort((a, b) => b.updatedAt - a.updatedAt));
@@ -75,6 +80,7 @@ export class Workspace {
   private persistTimer: ReturnType<typeof setTimeout> | undefined;
   private statsTimer: ReturnType<typeof setTimeout> | undefined;
   private pendingPersist: WaffleDoc | null = null;
+  private update: Update | null = null;
 
   async init(): Promise<void> {
     this.applyTheme(storedTheme() ?? systemTheme(), false);
@@ -109,7 +115,10 @@ export class Workspace {
       this.ready = true;
     }
 
-    if (this.native) void this.attachNative();
+    if (this.native) {
+      void this.attachNative();
+      setTimeout(() => void this.watchForUpdates(), UPDATE_DELAY);
+    }
     window.addEventListener('pagehide', () => void this.flushPersist());
   }
 
@@ -138,6 +147,35 @@ export class Workspace {
       });
       if (!close) event.preventDefault();
     });
+  }
+
+  // Updates
+
+  // Looks for a newer release now and every few hours, downloads it quietly,
+  // and then offers a restart from the menu.
+  private async watchForUpdates(): Promise<void> {
+    try {
+      this.update = await fetchUpdate();
+    } catch (err) {
+      console.warn(err);
+    }
+    if (!this.update) {
+      setTimeout(() => void this.watchForUpdates(), UPDATE_INTERVAL);
+      return;
+    }
+    this.updateVersion = this.update.version;
+    toasts.show(`Waffle ${this.update.version} is ready. Restart from the menu to update.`, 5000);
+  }
+
+  async installUpdate(): Promise<void> {
+    if (!this.update) return;
+    await this.flushPersist();
+    try {
+      await applyUpdate(this.update);
+    } catch (err) {
+      console.error(err);
+      toasts.show("Couldn't install the update", 4000);
+    }
   }
 
   // Documents

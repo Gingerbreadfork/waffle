@@ -52,6 +52,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_process::init())
         .manage(OpenedFiles::default())
         .invoke_handler(tauri::generate_handler![take_opened_files])
         .setup(|app| {
@@ -61,6 +62,11 @@ pub fn run() {
                         .level(log::LevelFilter::Info)
                         .build(),
                 )?;
+            }
+            // A Flatpak is updated by Flathub, never by the app itself.
+            if !cfg!(debug_assertions) && std::env::var_os("FLATPAK_ID").is_none() {
+                app.handle()
+                    .plugin(tauri_plugin_updater::Builder::new().build())?;
             }
             let args: Vec<String> = std::env::args_os()
                 .skip(1)

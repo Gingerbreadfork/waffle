@@ -45,6 +45,10 @@
 <svelte:window {onpointerdown} />
 
 <div class="menu" role="menu" tabindex="-1" bind:this={root} {onkeydown}>
+  {#if ws.updateVersion}
+    <button role="menuitem" class="update" onclick={() => run(() => ws.installUpdate())}>Restart to update<kbd>{ws.updateVersion}</kbd></button>
+    <hr />
+  {/if}
   <button role="menuitem" onclick={() => run(() => ws.newDoc())}>New document</button>
   <button role="menuitem" onclick={() => run(() => ws.openFile())}>Open file<kbd>{ws.modKey} O</kbd></button>
   <button role="menuitem" onclick={() => run(() => ws.save())}>
@@ -124,6 +128,11 @@
   .menu > button:focus-visible {
     background: color-mix(in oklab, var(--golden) 14%, transparent);
     outline: none;
+  }
+
+  .menu > button.update {
+    color: var(--toasted);
+    font-weight: 620;
   }
 
   .menu > button.danger {

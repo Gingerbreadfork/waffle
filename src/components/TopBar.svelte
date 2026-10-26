@@ -58,8 +58,8 @@
     </button>
     <button
       class="icon-btn"
-      aria-label="More"
-      data-tip="More"
+      aria-label={ws.updateVersion ? 'More, update ready' : 'More'}
+      data-tip={ws.updateVersion ? 'Update ready' : 'More'}
       data-tip-align="end"
       data-menu-toggle
       aria-haspopup="menu"
@@ -69,6 +69,9 @@
       <svg viewBox="0 0 20 20" aria-hidden="true">
         <circle cx="10" cy="4.5" r="1.4" class="dot" /><circle cx="10" cy="10" r="1.4" class="dot" /><circle cx="10" cy="15.5" r="1.4" class="dot" />
       </svg>
+      {#if ws.updateVersion}
+        <span class="badge" aria-hidden="true"></span>
+      {/if}
     </button>
     {#if ws.menuOpen}
       <Menu />
@@ -165,6 +168,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
+  }
+
+  .badge {
+    position: absolute;
+    top: 6px;
+    right: 7px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--golden);
+    box-shadow: 0 0 0 2px var(--bg);
   }
 
   .dirty {
