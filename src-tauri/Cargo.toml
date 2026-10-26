@@ -1,6 +1,6 @@
 [package]
 name = "waffle"
-version = "0.1.3"
+version = "0.1.4"
 description = "A Markdown reader and editor with separate rooms for reading and writing."
 authors = ["gingerbreadfork"]
 license = ""
