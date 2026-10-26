@@ -1,4 +1,5 @@
-import { isTauri } from '@tauri-apps/api/core';
+import { isTauri, invoke } from '@tauri-apps/api/core';
+import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open, save } from '@tauri-apps/plugin-dialog';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
@@ -50,6 +51,15 @@ export async function openFileDialog(): Promise<OpenedFile | null> {
     input.oncancel = () => resolve(null);
     input.click();
   });
+}
+
+// Files the desktop asked Waffle to open, at launch or from a later launch.
+export async function takeOpenedFiles(): Promise<string[]> {
+  return native ? invoke<string[]>('take_opened_files') : [];
+}
+
+export function onOpenedFiles(handler: () => void): Promise<UnlistenFn> {
+  return listen('opened-files', handler);
 }
 
 export function readFile(path: string): Promise<string> {

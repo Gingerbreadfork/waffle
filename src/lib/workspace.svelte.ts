@@ -76,9 +76,12 @@ export class Workspace {
         await this.library.put(doc);
       }
       this.docs = docs;
-      const last = settings.get<string | null>('lastDoc', null);
-      const first = this.sortedDocs.find((d) => d.id === last) ?? this.sortedDocs[0];
-      await this.openDoc(first.id);
+      await this.openHandedFiles();
+      if (!this.current) {
+        const last = settings.get<string | null>('lastDoc', null);
+        const first = this.sortedDocs.find((d) => d.id === last) ?? this.sortedDocs[0];
+        await this.openDoc(first.id);
+      }
     } catch (err) {
       console.error(err);
       toasts.show("Couldn't load your documents", 4000);
@@ -92,6 +95,9 @@ export class Workspace {
   }
 
   private async attachNative(): Promise<void> {
+    await files.onOpenedFiles(() => void this.openHandedFiles());
+    // Catches files handed over while the listener was being set up.
+    void this.openHandedFiles();
     await getCurrentWebview().onDragDropEvent((event) => {
       const payload = event.payload;
       if (payload.type === 'enter' || payload.type === 'over') this.dropping = true;
@@ -199,6 +205,10 @@ export class Workspace {
       console.error(err);
       toasts.show(`Couldn't open ${files.baseName(path)}`);
     }
+  }
+
+  private async openHandedFiles(): Promise<void> {
+    for (const path of await files.takeOpenedFiles()) await this.openPath(path);
   }
 
   async openDroppedFile(name: string, text: string): Promise<void> {

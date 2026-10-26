@@ -83,7 +83,9 @@ line.
 after you stop typing, together with where you were reading and where your cursor was.
 Close the app mid-sentence and the sentence is there when you come back.
 
-**Works with files too.** Open a `.md` file through the dialog or drop one on the window.
+**Works with files too.** Open a `.md` file through the dialog, drop one on the window, or
+open it from your file manager: Waffle registers itself for Markdown files, and a file
+opened while Waffle is running goes to the window you already have.
 Save writes back to the same path; the title shows a dot and the bottom bar says so while a
 file has changes that aren't on disk, and closing the window with unsaved changes asks
 first. Reopening a file picks up changes made outside Waffle, as long as you haven't edited
@@ -201,7 +203,8 @@ when you return to it.
 
 - [Tauri 2](https://tauri.app) provides the window and the native pieces: file dialogs,
   reading and writing files, the clipboard, opening links, and a JSON store in the app data
-  directory for the document list. The Rust side registers those plugins and nothing more.
+  directory for the document list. The Rust side registers those plugins, keeps Waffle to a
+  single instance, and hands the window any files it was asked to open.
 - The interface is [Svelte 5](https://svelte.dev) with runes. One `Workspace` class holds
   the state and the orchestration; components are thin.
 - Markdown is rendered by markdown-it with a few small rules of its own: source line numbers
@@ -226,7 +229,7 @@ src/
   lib/library.ts           the document store, with an IndexedDB fallback for the browser
   lib/welcome.md           the first document
   styles/                  design tokens, the reading typography, code and print styles
-src-tauri/                 the Rust shell: plugins, window, capabilities
+src-tauri/                 the Rust shell: plugins, window, capabilities, opened files
 ```
 
 Documents live in `~/.local/share/io.github.gingerbreadfork.waffle/library.json` on Linux

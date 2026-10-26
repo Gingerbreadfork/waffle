@@ -2,9 +2,12 @@
 Type=Application
 Name=Waffle
 Comment=Read and write Markdown in two rooms
-Exec={{exec}}
+Exec={{exec}} %F
 Icon={{icon}}
 Terminal=false
 Categories=Office;Utility;TextEditor;
 Keywords=markdown;editor;reader;notes;writing;
 StartupWMClass=waffle
+{{#if mime_type}}
+MimeType={{mime_type}};
+{{/if}}
