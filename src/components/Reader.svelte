@@ -193,7 +193,7 @@
   {onscroll}
 >
   <div class="grid">
-    {#if tocEntries.length > 1 && tocFits}
+    {#if ws.contentsEnabled && tocEntries.length > 1 && tocFits}
       <nav class="toc" aria-label="Contents">
         <button class="toc-toggle" aria-expanded={ws.showContents} aria-controls="toc-list" onclick={() => ws.toggleContents()}>
           Contents

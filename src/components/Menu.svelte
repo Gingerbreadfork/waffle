@@ -70,6 +70,9 @@
       {/each}
     </div>
   </div>
+  <button role="menuitemcheckbox" class="check" aria-checked={ws.contentsEnabled} onclick={() => ws.toggleContentsEnabled()}>
+    Contents<span class="switch" aria-hidden="true"></span>
+  </button>
   <hr />
   {#if confirming}
     <div class="confirm">
@@ -201,6 +204,39 @@
 
   .seg button[aria-checked='true'] {
     color: #2b1a0d;
+  }
+
+  .switch {
+    position: relative;
+    flex: none;
+    width: 28px;
+    height: 16px;
+    border-radius: 8px;
+    background: var(--bg-chrome);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--line) 80%, transparent);
+    transition: background 0.2s;
+  }
+
+  .switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--bg-raised);
+    box-shadow: 0 1px 2px rgb(var(--shadow) / 0.28);
+    transition: transform 0.2s var(--ease-out);
+  }
+
+  .check[aria-checked='true'] .switch {
+    background: var(--golden);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  }
+
+  .check[aria-checked='true'] .switch::after {
+    transform: translateX(12px);
   }
 
   hr {

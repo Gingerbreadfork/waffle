@@ -47,6 +47,7 @@ export class Workspace {
   focus = $state(false);
   pageWidth = $state<PageWidth>('medium');
   showContents = $state(true);
+  contentsEnabled = $state(true);
   shelfOpen = $state(false);
   menuOpen = $state(false);
   findOpen = $state(false);
@@ -91,6 +92,7 @@ export class Workspace {
     const width = settings.get<string>('pageWidth', 'medium');
     if (PAGE_WIDTHS.some((w) => w.id === width)) this.pageWidth = width as PageWidth;
     this.showContents = settings.get('contents', true);
+    this.contentsEnabled = settings.get('contentsEnabled', true);
 
     try {
       this.library = await openLibrary();
@@ -505,6 +507,11 @@ export class Workspace {
   toggleContents(): void {
     this.showContents = !this.showContents;
     settings.set('contents', this.showContents);
+  }
+
+  toggleContentsEnabled(): void {
+    this.contentsEnabled = !this.contentsEnabled;
+    settings.set('contentsEnabled', this.contentsEnabled);
   }
 
   async setPageWidth(width: PageWidth): Promise<void> {
