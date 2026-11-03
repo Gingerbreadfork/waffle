@@ -1,4 +1,4 @@
-import { isTauri, invoke } from '@tauri-apps/api/core';
+import { isTauri, invoke, convertFileSrc } from '@tauri-apps/api/core';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open, save } from '@tauri-apps/plugin-dialog';
@@ -23,6 +23,27 @@ export function isMarkdownPath(path: string): boolean {
 
 export function baseName(path: string): string {
   return path.split(/[\\/]/).pop() || path;
+}
+
+// Points a local image at the asset protocol, resolving relative paths
+// against the document's folder. Web and data URLs pass through.
+export function localImageSrc(src: string, docPath: string): string {
+  const windowsPath = /^[a-zA-Z]:[\\/]/.test(src);
+  if (!windowsPath && /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(src) && !/^file:/i.test(src)) return src;
+  try {
+    const base = 'file://' + toUrlPath(docPath);
+    const url = new URL(windowsPath ? 'file://' + toUrlPath(src) : src, base);
+    let path = decodeURIComponent(url.pathname);
+    if (/^\/[a-zA-Z]:\//.test(path)) path = path.slice(1);
+    return convertFileSrc(path);
+  } catch {
+    return src;
+  }
+}
+
+function toUrlPath(path: string): string {
+  const parts = path.replace(/\\/g, '/').split('/').map(encodeURIComponent).join('/');
+  return parts.startsWith('/') ? parts : '/' + parts;
 }
 
 export function fileNameFor(title: string, ext = 'md'): string {

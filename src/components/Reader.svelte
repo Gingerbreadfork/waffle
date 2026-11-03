@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getWorkspace, BAR_INSET } from '../lib/workspace.svelte';
   import { renderMarkdown } from '../lib/markdown';
-  import { openExternal } from '../lib/files';
+  import { openExternal, localImageSrc, native } from '../lib/files';
   import Find from './Find.svelte';
 
   const ws = getWorkspace();
@@ -12,7 +12,10 @@
   let finder = $state<ReturnType<typeof Find>>();
   let viewWidth = $state(0);
 
-  const rendered = $derived(renderMarkdown(ws.readSource));
+  const docPath = $derived(native ? ws.current?.path : undefined);
+  const rendered = $derived(
+    renderMarkdown(ws.readSource, docPath ? (src) => localImageSrc(src, docPath) : undefined),
+  );
   const tocEntries = $derived(rendered.toc.filter((entry) => entry.level <= 3));
   const empty = $derived(ws.readSource.trim() === '');
 

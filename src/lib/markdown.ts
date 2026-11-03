@@ -140,17 +140,26 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   }
 });
 
-export function renderMarkdown(src: string): Rendered {
+// Maps an image's src to one the webview can load, or returns it unchanged.
+export type ImageResolver = (src: string) => string;
+
+export function renderMarkdown(src: string, resolveImage?: ImageResolver): Rendered {
   const env: Env = {};
   const raw = md.render(src, env);
-  const html = finishHtml(DOMPurify.sanitize(raw, { ADD_ATTR: ['target'] }));
+  const html = finishHtml(DOMPurify.sanitize(raw, { ADD_ATTR: ['target'] }), resolveImage);
   return { html, toc: env.toc ?? [] };
 }
 
 // Reader affordances added after sanitising: scrollable tables, captioned
 // figures, and a copy button plus language label on code blocks.
-function finishHtml(html: string): string {
+function finishHtml(html: string, resolveImage?: ImageResolver): string {
   const doc = new DOMParser().parseFromString(`<!doctype html><body>${html}`, 'text/html');
+  if (resolveImage) {
+    for (const img of doc.querySelectorAll('img')) {
+      const src = img.getAttribute('src');
+      if (src) img.setAttribute('src', resolveImage(src));
+    }
+  }
   for (const table of doc.querySelectorAll('table')) {
     const wrap = doc.createElement('div');
     wrap.className = 'table-wrap';
