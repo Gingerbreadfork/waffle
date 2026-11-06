@@ -157,8 +157,16 @@
     if (!link) return;
     const href = link.getAttribute('href') ?? '';
     event.preventDefault();
-    if (href.startsWith('#')) scrollToId(decodeURIComponent(href.slice(1)));
+    if (href.startsWith('#')) scrollToId(decodeFragment(href.slice(1)));
     else if (/^(https?:|mailto:)/i.test(href)) void openExternal(href);
+  }
+
+  function decodeFragment(fragment: string): string {
+    try {
+      return decodeURIComponent(fragment);
+    } catch {
+      return fragment;
+    }
   }
 
   // Double-click a block to edit it: the line under the pointer opens under the cursor.
