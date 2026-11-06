@@ -16,11 +16,11 @@
 
   const shown = $derived(ws.findOpen && ws.mode === 'read');
 
-  // Searches again when the query or the page changes. A new query moves to the
-  // match nearest the top of the screen; a re-rendered page keeps the current one.
+  // While open, searches again when the query or the page changes. A new query moves
+  // to the match nearest the top of the screen; a re-rendered page keeps the current one.
   $effect(() => {
     void html;
-    const found = article ? findRanges(article, query) : [];
+    const found = ws.findOpen && article ? findRanges(article, query) : [];
     const fresh = ws.findOpen && query !== searched;
     searched = ws.findOpen ? query : '';
     untrack(() => {
