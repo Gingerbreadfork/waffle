@@ -36,8 +36,8 @@
   }
 
   .read-grid {
-    display: block;
-    padding: 0;
+    display: block !important;
+    padding: 0 !important;
   }
 
   .paper {

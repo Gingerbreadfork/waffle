@@ -192,7 +192,7 @@
   bind:clientWidth={viewWidth}
   {onscroll}
 >
-  <div class="grid">
+  <div class="read-grid">
     {#if ws.contentsEnabled && tocEntries.length > 1 && tocFits}
       <nav class="toc" aria-label="Contents">
         <button class="toc-toggle" aria-expanded={ws.showContents} aria-controls="toc-list" onclick={() => ws.toggleContents()}>
@@ -240,14 +240,14 @@
     scroll-padding-top: calc(var(--bar-h) + 1rem);
   }
 
-  .grid {
+  .read-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, var(--measure)) minmax(0, 1fr);
     column-gap: 2rem;
     padding: calc(var(--bar-h) + 3.5rem) 1.5rem 30vh;
   }
 
-  .grid > :global(.paper) {
+  .read-grid > :global(.paper) {
     grid-column: 2;
     min-width: 0;
   }
@@ -347,7 +347,7 @@
   }
 
   @media (max-width: 640px) {
-    .grid {
+    .read-grid {
       padding: calc(var(--bar-h) + 2rem) 1.25rem 30vh;
     }
   }

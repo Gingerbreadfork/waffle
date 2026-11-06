@@ -5,14 +5,14 @@
   const ws = getWorkspace();
 </script>
 
-<div class={['host', { raised: ws.mode === 'write' }]} aria-live="polite">
+<div class={['toast-host', { raised: ws.mode === 'write' }]} aria-live="polite">
   {#each toasts.items as toast (toast.id)}
     <div class={['toast', { leaving: toast.leaving }]}>{toast.text}</div>
   {/each}
 </div>
 
 <style>
-  .host {
+  .toast-host {
     position: absolute;
     left: 0;
     right: 0;
@@ -26,7 +26,7 @@
     transition: bottom var(--dur) var(--ease-out);
   }
 
-  .host.raised {
+  .toast-host.raised {
     bottom: calc(var(--strip-h) + 14px);
   }
 
