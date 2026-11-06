@@ -362,7 +362,13 @@ export class Workspace {
       clearTimeout(this.persistTimer);
       this.pendingPersist = null;
     }
-    await this.library?.remove(id);
+    try {
+      await this.library?.remove(id);
+    } catch (err) {
+      console.error(err);
+      toasts.show("Couldn't delete that document");
+      return;
+    }
     this.docs.splice(index, 1);
     if (this.current?.id === id) {
       this.current = null;
