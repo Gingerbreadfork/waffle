@@ -56,6 +56,12 @@
     <display_length compare="ge">520</display_length>
   </requires>
   <releases>
+    <release version="0.1.6" date="2026-11-07">
+      <url>https://github.com/Gingerbreadfork/waffle/releases/tag/v0.1.6</url>
+      <description>
+        <p>Saving now asks first when the file was changed in another app since Waffle read it. Images given as Windows paths now show, printed pages leave out the toasts and screen padding, and exported HTML no longer carries copy buttons that do nothing. Binary files dropped on the window are turned away instead of opening as garbled text.</p>
+      </description>
+    </release>
     <release version="0.1.5" date="2026-11-04">
       <url>https://github.com/Gingerbreadfork/waffle/releases/tag/v0.1.5</url>
       <description>
