@@ -282,6 +282,11 @@ export class Workspace {
   }
 
   private async adoptFile(file: files.OpenedFile): Promise<void> {
+    // Text never holds a NUL character, but images and other binary files do.
+    if (file.text.includes('\0')) {
+      toasts.show(`${file.name} isn't a text file`);
+      return;
+    }
     const existing = file.path ? this.docs.find((d) => d.path === file.path) : undefined;
     if (existing) {
       this.takeDiskText(existing, file.text);
