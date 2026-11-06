@@ -223,13 +223,20 @@ export class Workspace {
 
   private async refreshFromDisk(doc: WaffleDoc): Promise<void> {
     try {
-      const text = await files.readFile(doc.path!);
-      if (text === doc.diskContent) return;
-      const clean = doc.content === doc.diskContent;
-      doc.diskContent = text;
-      if (clean) this.applyContent(doc, text);
+      this.takeDiskText(doc, await files.readFile(doc.path!));
     } catch {
       /* the file may have moved; keep the stored copy */
+    }
+  }
+
+  // A clean document follows the file. One with unsaved changes keeps the disk
+  // text they were made against, so saving can tell the file has changed since.
+  private takeDiskText(doc: WaffleDoc, text: string): void {
+    if (doc.content === doc.diskContent) {
+      doc.diskContent = text;
+      this.applyContent(doc, text);
+    } else if (doc.content === text) {
+      doc.diskContent = text;
     }
   }
 
@@ -277,9 +284,7 @@ export class Workspace {
   private async adoptFile(file: files.OpenedFile): Promise<void> {
     const existing = file.path ? this.docs.find((d) => d.path === file.path) : undefined;
     if (existing) {
-      const clean = existing.content === existing.diskContent;
-      existing.diskContent = file.text;
-      if (clean) this.applyContent(existing, file.text);
+      this.takeDiskText(existing, file.text);
       await this.openDoc(existing.id);
       return;
     }
@@ -296,8 +301,25 @@ export class Workspace {
   async save(): Promise<void> {
     const doc = this.current;
     if (!doc) return;
-    if (doc.path && this.native) await this.writeDoc(doc, doc.path);
-    else await this.saveAs();
+    if (!doc.path || !this.native) return this.saveAs();
+    if (await this.mayOverwrite(doc, doc.path)) await this.writeDoc(doc, doc.path);
+  }
+
+  // Asks before replacing a file that changed outside Waffle since it was last read or written.
+  private async mayOverwrite(doc: WaffleDoc, path: string): Promise<boolean> {
+    let text: string;
+    try {
+      text = await files.readFile(path);
+    } catch {
+      return true;
+    }
+    if (text === doc.diskContent || text === doc.content) return true;
+    return confirm(`${doc.fileName} has been changed outside Waffle. Replace it with your version?`, {
+      title: 'File changed on disk',
+      kind: 'warning',
+      okLabel: 'Replace',
+      cancelLabel: 'Cancel',
+    });
   }
 
   async saveAs(): Promise<void> {
