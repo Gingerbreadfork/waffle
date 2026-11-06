@@ -6,13 +6,11 @@
   "permissions": [
     "core:default",
     "core:window:allow-set-title",
-    "core:window:allow-close",
     "core:window:allow-destroy",
     "dialog:default",
     "store:default",
     "opener:default",
     "clipboard-manager:allow-write-text",
-    "clipboard-manager:allow-read-text",
     "updater:default",
     "process:allow-restart",
     "fs:default",
@@ -23,10 +21,6 @@
     {
       "identifier": "fs:allow-write-text-file",
       "allow": [{ "path": "$HOME/**" }, { "path": "$TEMP/**" }, { "path": "/media/**" }, { "path": "/mnt/**" }, { "path": "/run/media/**" }, { "path": "/Volumes/**" }]
-    },
-    {
-      "identifier": "fs:allow-exists",
-      "allow": [{ "path": "$HOME/**" }, { "path": "/media/**" }, { "path": "/mnt/**" }, { "path": "/run/media/**" }, { "path": "/Volumes/**" }]
     }
   ]
 }
