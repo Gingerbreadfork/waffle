@@ -34,6 +34,11 @@ jobs:
         run: pnpm check
 
       - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Check Rust formatting
+        run: cargo fmt --manifest-path src-tauri/Cargo.toml --check
 
       - uses: Swatinem/rust-cache@v2
         with:
@@ -42,6 +47,10 @@ jobs:
       # Builds the frontend first through beforeBuildCommand.
       - name: Build the packages
         run: ARCH=$(uname -m) NO_STRIP=true pnpm tauri build
+
+      # Runs after the build because the Rust code embeds the built frontend.
+      - name: Lint the Rust code
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
 
       - uses: actions/upload-artifact@v7
         with:
