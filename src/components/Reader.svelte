@@ -14,7 +14,7 @@
 
   const docPath = $derived(native ? ws.current?.path : undefined);
   const rendered = $derived(
-    renderMarkdown(ws.readSource, docPath ? (src) => localImageSrc(src, docPath) : undefined),
+    renderMarkdown(ws.readSource, { resolveImage: docPath ? (src) => localImageSrc(src, docPath) : undefined }),
   );
   const tocEntries = $derived(rendered.toc.filter((entry) => entry.level <= 3));
   const empty = $derived(ws.readSource.trim() === '');

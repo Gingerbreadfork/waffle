@@ -375,7 +375,7 @@ export class Workspace {
   async exportHtml(): Promise<void> {
     const doc = this.current;
     if (!doc) return;
-    const { html } = renderMarkdown(doc.content);
+    const { html } = renderMarkdown(doc.content, { bare: true });
     const out = exportHtml(doc.title, html);
     const name = files.fileNameFor(doc.title, 'html');
     if (this.native) {

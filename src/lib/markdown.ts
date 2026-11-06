@@ -140,19 +140,23 @@ DOMPurify.addHook('afterSanitizeAttributes', (node) => {
   }
 });
 
-// Maps an image's src to one the webview can load, or returns it unchanged.
-export type ImageResolver = (src: string) => string;
+export interface RenderOptions {
+  // Maps an image's src to one the webview can load, or returns it unchanged.
+  resolveImage?: (src: string) => string;
+  // Leaves out the copy buttons and language labels, which only work in the app.
+  bare?: boolean;
+}
 
-export function renderMarkdown(src: string, resolveImage?: ImageResolver): Rendered {
+export function renderMarkdown(src: string, opts: RenderOptions = {}): Rendered {
   const env: Env = {};
   const raw = md.render(src, env);
-  const html = finishHtml(DOMPurify.sanitize(raw, { ADD_ATTR: ['target'] }), resolveImage);
+  const html = finishHtml(DOMPurify.sanitize(raw, { ADD_ATTR: ['target'] }), opts);
   return { html, toc: env.toc ?? [] };
 }
 
 // Reader affordances added after sanitising: scrollable tables, captioned
 // figures, and a copy button plus language label on code blocks.
-function finishHtml(html: string, resolveImage?: ImageResolver): string {
+function finishHtml(html: string, { resolveImage, bare }: RenderOptions): string {
   const doc = new DOMParser().parseFromString(`<!doctype html><body>${html}`, 'text/html');
   if (resolveImage) {
     for (const img of doc.querySelectorAll('img')) {
@@ -183,6 +187,7 @@ function finishHtml(html: string, resolveImage?: ImageResolver): string {
     }
     p.replaceWith(figure);
   }
+  if (bare) return doc.body.innerHTML;
   for (const pre of doc.querySelectorAll('pre')) {
     const button = doc.createElement('button');
     button.type = 'button';
@@ -272,6 +277,7 @@ export function exportHtml(title: string, body: string): string {
   hr { border: 0; text-align: center; margin: 3rem 0; }
   hr::after { content: '▪ ▪ ▪'; color: #d79d36; letter-spacing: 0.5em; }
   img { max-width: 100%; height: auto; border-radius: 10px; }
+  .table-wrap { overflow-x: auto; }
   li.task { list-style: none; }
   .footnotes { margin-top: 3rem; border-top: 1px solid #e5d7b3; padding-top: 1rem; font-size: 0.86em; color: #8b6d4b; }
   .footnotes-sep { display: none; }
