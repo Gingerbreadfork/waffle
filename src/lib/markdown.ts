@@ -207,7 +207,7 @@ function finishHtml(html: string, { resolveImage, bare }: RenderOptions): string
 
 export function docStats(src: string): { words: number; minutes: number } {
   const text = src
-    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/(`{3,}|~{3,})[\s\S]*?\1/g, ' ')
     .replace(/`[^`]*`/g, ' ')
     .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
@@ -225,7 +225,7 @@ export function deriveTitle(src: string): string {
   }
   for (const line of lines) {
     const s = line.trim();
-    if (!s || /^(```|---|\*\*\*|___|<)/.test(s)) continue;
+    if (!s || /^(```|~~~|---|\*\*\*|___|<)/.test(s)) continue;
     const t = cleanInline(s.replace(/^#{1,6}\s+|^[-*+]\s+(\[[ xX]\]\s+)?|^\d+[.)]\s+|^>\s*/, ''));
     if (t) return t.length > 64 ? t.slice(0, 61).trimEnd() + '…' : t;
   }
@@ -236,7 +236,7 @@ export function snippet(src: string, title: string): string {
   const lines = src.split('\n');
   for (const line of lines) {
     const s = line.trim();
-    if (!s || /^(#|```|---|\*\*\*|___|<|\|)/.test(s)) continue;
+    if (!s || /^(#{1,6}(\s|$)|```|~~~|---|\*\*\*|___|<|\|)/.test(s)) continue;
     const t = cleanInline(s.replace(/^[-*+]\s+(\[[ xX]\]\s+)?|^\d+[.)]\s+|^>\s*/, ''));
     if (t && t !== title) return t.length > 90 ? t.slice(0, 87).trimEnd() + '…' : t;
   }
