@@ -623,6 +623,8 @@ export class Workspace {
         this.reader?.findNext(event.shiftKey ? -1 : 1);
         break;
     }
+    // A shortcut acts on the document, so the menu should not stay open over it.
+    if (event.defaultPrevented) this.menuOpen = false;
   }
 }
 
