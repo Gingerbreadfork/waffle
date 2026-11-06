@@ -28,11 +28,12 @@ export function baseName(path: string): string {
 // Points a local image at the asset protocol, resolving relative paths
 // against the document's folder. Web and data URLs pass through.
 export function localImageSrc(src: string, docPath: string): string {
-  const windowsPath = /^[a-zA-Z]:[\\/]/.test(src);
+  // Markdown arrives percent-encoded, with a Windows path's backslashes as %5C.
+  const windowsPath = /^[a-zA-Z]:([\\/]|%5c)/i.test(src);
   if (!windowsPath && /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(src) && !/^file:/i.test(src)) return src;
   try {
     const base = 'file://' + toUrlPath(docPath);
-    const url = new URL(windowsPath ? 'file://' + toUrlPath(src) : src, base);
+    const url = new URL(windowsPath ? 'file:///' + src.replace(/\\|%5c/gi, '/') : src, base);
     let path = decodeURIComponent(url.pathname);
     if (/^\/[a-zA-Z]:\//.test(path)) path = path.slice(1);
     return convertFileSrc(path);
