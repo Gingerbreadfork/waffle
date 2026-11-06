@@ -3,8 +3,8 @@ name = "waffle"
 version = "0.1.5"
 description = "A Markdown reader and editor with separate rooms for reading and writing."
 authors = ["gingerbreadfork"]
-license = ""
-repository = ""
+license = "MIT"
+repository = "https://github.com/Gingerbreadfork/waffle"
 edition = "2024"
 rust-version = "1.90"
 
