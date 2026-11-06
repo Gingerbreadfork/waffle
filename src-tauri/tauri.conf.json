@@ -28,7 +28,14 @@
       }
     ],
     "security": {
-      "csp": null,
+      "csp": {
+        "default-src": "'self'",
+        "connect-src": "ipc: http://ipc.localhost",
+        "img-src": "'self' asset: http://asset.localhost data: blob: https: http:",
+        "media-src": "'self' data: blob: https: http:",
+        "style-src": "'self' 'unsafe-inline'",
+        "form-action": "'none'"
+      },
       "assetProtocol": {
         "enable": true,
         "scope": ["$HOME/**", "$TEMP/**", "/media/**", "/mnt/**", "/run/media/**", "/Volumes/**"]
