@@ -28,8 +28,8 @@ modules:
     sources:
       - type: file
         dest-filename: waffle.deb
-        url: https://github.com/Gingerbreadfork/waffle/releases/download/v0.1.1/Waffle_0.1.1_amd64.deb
-        sha256: 1fdf80c4fb5a71c6f45c6dd6cdb3592a3bf37563cf6e75ff21e2f454bbb4f70e
+        url: https://github.com/Gingerbreadfork/waffle/releases/download/v0.1.5/Waffle_0.1.5_amd64.deb
+        sha256: 341298718a3129260b876d2198e7ae145e22d13fc150ef06482600afca04b6e9
         only-arches:
           - x86_64
         x-checker-data:
