@@ -213,6 +213,7 @@
               <a
                 class={['toc-link', `lvl-${entry.level}`, { active: entry.id === activeId }]}
                 href="#{entry.id}"
+                data-text={entry.text}
                 onclick={(e) => {
                   e.preventDefault();
                   scrollToId(entry.id);
@@ -266,7 +267,10 @@
     align-self: start;
     position: sticky;
     top: calc(var(--bar-h) + 3.5rem);
-    width: 13.5rem;
+    /* Grows to fit long headings, up to the width of the margin. */
+    width: max-content;
+    min-width: 13.5rem;
+    max-width: 100%;
     max-height: calc(100dvh - var(--bar-h) - 6rem);
     overflow-y: auto;
     padding-right: 0.5rem;
@@ -332,6 +336,15 @@
       color 0.15s,
       border-color 0.15s,
       background-color 0.15s;
+  }
+
+  /* Reserves the width of the active weight so the list does not resize as the reader scrolls. */
+  .toc-link::after {
+    content: attr(data-text);
+    display: block;
+    height: 0;
+    font-weight: 620;
+    visibility: hidden;
   }
 
   .toc-link.lvl-2 {
